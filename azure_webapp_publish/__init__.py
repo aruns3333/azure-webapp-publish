@@ -6,6 +6,3 @@ __version__ = '0.1.0'
 
 from .kudu import KuduSession
 
-if __name__ == '__main__':
-    from .cli import main
-    main()
