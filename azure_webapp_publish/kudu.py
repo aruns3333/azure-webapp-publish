@@ -39,6 +39,19 @@ class KuduSession(object):
     def post(self, kudupath, **kwarg):
         return self._request(self.session.post, kudupath, **kwarg)
 
+    def command(self, command, workingdir=r'D:\home\site\wwwroot'):
+        '''Execute a command.
+
+        :param str command: The command to execute
+        :param str workingdir: The current working dir while executing the command. Default wwwroot
+        :return: The json
+        '''
+        cmd = {
+            'command': command,
+            'dir': workingdir
+        }
+        return self.post('command', json=cmd)
+
     def get_deployed_files(self, vfs_basepath='site/wwwroot/'):
         """Return a list of deployed files in this Webapp as a generator.
 

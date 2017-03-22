@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--list-available-extensions', dest='list_available_extensions',
                         action='store_true',
                         help='List available extensions and exit')
+    parser.add_argument('--execute-command', dest='command',
+                        help='Execute a command')
 
     args = parser.parse_args()
 
@@ -33,6 +35,13 @@ def main():
         sys.exit(0)
     if args.list_installed_extensions:
         print(kudu_session.get('siteextensions').text)
+        sys.exit(0)
+    if args.command:
+        print(kudu_session.command(args.command).text)
+        sys.exit(0)
+    if args.add_extensions:
+        for ext_id in args.add_extensions:
+            kudu_session.put('siteextensions/'+ext_id)
         sys.exit(0)
     if args.deploy:
         # Get from Kudu
@@ -49,8 +58,6 @@ def main():
             apply_actions(local_files, deployed_files, visitor)
         sys.exit(0)
 
-    for ext_id in args.add_extensions:
-        kudu_session.put('siteextensions/'+ext_id)
 
 
 if __name__ == '__main__':

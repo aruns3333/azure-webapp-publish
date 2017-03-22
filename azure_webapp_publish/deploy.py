@@ -25,23 +25,6 @@ def get_deployment_files(root):
 
     return all_files
 
-def deploy(root, dry_run=True):
-    all_files = get_deployment_files(root)
-
-
-def publish(kudu_session, actions, vfs_basepath='site/wwwroot/'):
-    print('Uploading', len(actions), 'files')
-    for action, dest, src in actions:
-        print(action, '  ', src, '->', dest)
-        if action in ["Create", "Update"]:
-            with open(src, 'rb') as f:
-                kudu_session.put('vfs/{}/{}'.format(vfs_basepath,dest), data=f, stream=True)
-        elif action in ["Delete"]:
-            kudu_session.delete('vfs/{}/{}'.format(vfs_basepath,dest))
-        else:
-            raise ValueError('Unknown action ', action)
-    print('Upload complete')
-    print()
 
 class ActionListVisitor(object):
     def __init__(self):
@@ -64,7 +47,6 @@ class UploaderVisitor(object):
             self.kudu_session.delete('vfs/{}/{}'.format(self.vfs_basepath,kudu_urlpath))
         else:
             raise ValueError('Unknown action ', action)
-
 
 def apply_actions(local_files, deployed_files, visitor):
     """Get actions to do "Update, Delete, Create"
